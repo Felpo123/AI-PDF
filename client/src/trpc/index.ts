@@ -38,6 +38,19 @@ const helloRouter = router({
         email: "",
       };
     }),
+  createUser: publicProcedure
+    .input(
+      z.object({
+        email: z.string(),
+        name: z.string(),
+      })
+    ).query(() => {
+      return {
+        id: "",
+        name: "",
+        email: "",
+      };
+    }),
 });
 
 const appRouter = router({

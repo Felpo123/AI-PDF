@@ -34,6 +34,7 @@ export function SignOut() {
 export default function Home() {
   const { data: user, isLoading } = trpc.hello.getUser.useQuery("1");
   console.log({ user, isLoading });
+  const { data: user2} = trpc.hello.createUser.useQuery({email: "hola@gmail.com", name: "ernesto"});
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -41,6 +42,9 @@ export default function Home() {
       <pre className="mt-4">
         {isLoading ? "Loading..." : JSON.stringify(user, null, 2)}
       </pre>
+      <p>
+        {JSON.stringify(user2, null, 2)}
+      </p>
     </main>
   );
 }
