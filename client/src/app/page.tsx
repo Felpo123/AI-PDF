@@ -1,46 +1,23 @@
-"use client";
-
-import { trpc } from "./_trpc/client";
-import { auth, signIn, signOut } from "@/auth";
-
-export function SignIn() {
-  return (
-    <form
-      action={async (formData) => {
-        await signIn("credentials", formData);
-      }}
-    >
-      <label>
-        Email
-        <input name="email" type="email" className="text-black" />
-      </label>
-      <button>Sign In</button>
-    </form>
-  );
-}
-
-export function SignOut() {
-  return (
-    <form
-      action={async () => {
-        await signOut();
-      }}
-    >
-      <button type="submit">Sign Out</button>
-    </form>
-  );
-}
+import MaxWidthWrapper from "@/components/MaxWidthWrapper";
+import { AuthTabs } from "@/components/AuthTabs";
 
 export default function Home() {
-  const { data: user, isLoading } = trpc.hello.getUser.useQuery("1");
-  console.log({ user, isLoading });
-
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <h1 className="text-4xl font-bold">Welcome to tRPC</h1>
-      <pre className="mt-4">
-        {isLoading ? "Loading..." : JSON.stringify(user, null, 2)}
-      </pre>
+    <main className="min-h-screen flex flex-col gap-1">
+      <MaxWidthWrapper className="mb-12 sm:mt-32 flex flex-col items-center justify-center text-center">
+        <div className="mx-auto mb-4 flex max-w-fit items-center justify-center space-x-2 overflow-hidden rounded-full border px-7 py-2 shadow-md backdrop-blur transition-all">
+          <p className="text-sm font-semibold text-gray-700">
+            Ingresa a tu cuenta!
+          </p>
+        </div>
+        <h1 className="max-w-5xl text-5xl font-bold md:text-6xl lg:text-7xl">
+          Chatea con tus <span className="text-primary">documentos</span> en
+          segundos.
+        </h1>
+      </MaxWidthWrapper>
+      <div className="mt-10 flex items-center justify-center">
+        <AuthTabs />
+      </div>
     </main>
   );
 }

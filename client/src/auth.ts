@@ -12,9 +12,20 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const email = credentials.email as string;
 
         try {
-          const { data: login } = trpc.hello.login.useQuery({ email });
-          const user = login as User;
-          return user;
+          const { mutate: login } = trpc.hello.login.useMutation({
+            onSuccess: ({ email, id, name }) => {
+              return {
+                email,
+                id,
+                name,
+              } as User;
+            },
+            onError: () => {
+              return null;
+            },
+          });
+          login({ email });
+          return null;
         } catch (error) {
           return null;
         }
