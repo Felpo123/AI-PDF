@@ -34,6 +34,19 @@ const helloRouter = router({
       }
       return user;
     }),
+  createUser: publicProcedure
+    .input(
+      z.object({ 
+        email: z.string(),
+        name: z.string(),
+       }))
+       .query(async ({ input }) => {
+        const user = db.user.create({data: {email: input.email, name: input.name}});
+        if(!user){
+          throw new Error("User not created");
+        }
+        return user;
+       }),
 });
 
 export const appRouter = router({

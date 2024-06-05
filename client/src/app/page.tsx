@@ -2,6 +2,7 @@ import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { AuthTabs } from "@/components/AuthTabs";
 
 export default function Home() {
+<<<<<<< HEAD
   return (
     <main className="min-h-screen flex flex-col gap-1">
       <MaxWidthWrapper className="mb-12 sm:mt-32 flex flex-col items-center justify-center text-center">
@@ -18,6 +19,21 @@ export default function Home() {
       <div className="mt-10 flex items-center justify-center">
         <AuthTabs />
       </div>
+=======
+  const { data: user, isLoading } = trpc.hello.getUser.useQuery("1");
+  console.log({ user, isLoading });
+  const { data: user2} = trpc.hello.createUser.useQuery({email: "hola@gmail.com", name: "ernesto"});
+
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      <h1 className="text-4xl font-bold">Welcome to tRPC</h1>
+      <pre className="mt-4">
+        {isLoading ? "Loading..." : JSON.stringify(user, null, 2)}
+      </pre>
+      <p>
+        {JSON.stringify(user2, null, 2)}
+      </p>
+>>>>>>> 94b912340b4fbcc4cb7a63ba4224e9bc655e8199
     </main>
   );
 }
