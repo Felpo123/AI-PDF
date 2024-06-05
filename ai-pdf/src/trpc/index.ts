@@ -40,7 +40,7 @@ const helloRouter = router({
         email: z.string(),
         name: z.string(),
        }))
-       .query(async ({ input }) => {
+       .mutation(async ({ input }) => {
         const user = db.user.create({data: {email: input.email, name: input.name}});
         if(!user){
           throw new Error("User not created");
