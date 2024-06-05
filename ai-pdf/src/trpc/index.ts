@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { initTRPC } from "@trpc/server";
+import { TRPCError, initTRPC } from "@trpc/server";
 import { z } from "zod";
 
 const t = initTRPC.create();
@@ -23,11 +23,14 @@ const helloRouter = router({
         email: z.string(),
       })
     )
-    .query(async ({ input }) => {
-      const user = db.user.findFirst({ where: { email: input.email } });
-
+    .mutation(async ({ input }) => {
+      const user = await db.user.findFirst({ where: { email: input.email } });
+      console.log(user);
       if (!user) {
-        throw new Error("User not found");
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
       }
       return user;
     }),
