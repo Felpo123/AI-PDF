@@ -23,7 +23,7 @@ const helloRouter = router({
         email: z.string(),
       })
     )
-    .mutation(async ({ input }) => {
+    .query(async ({ input }) => {
       const user = await db.user.findFirst({ where: { email: input.email } });
       console.log(user);
       if (!user) {
@@ -36,17 +36,20 @@ const helloRouter = router({
     }),
   createUser: publicProcedure
     .input(
-      z.object({ 
+      z.object({
         email: z.string(),
         name: z.string(),
-       }))
-       .mutation(async ({ input }) => {
-        const user = db.user.create({data: {email: input.email, name: input.name}});
-        if(!user){
-          throw new Error("User not created");
-        }
-        return user;
-       }),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const user = db.user.create({
+        data: { email: input.email, name: input.name },
+      });
+      if (!user) {
+        throw new Error("User not created");
+      }
+      return user;
+    }),
 });
 
 export const appRouter = router({

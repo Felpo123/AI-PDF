@@ -3,7 +3,7 @@ import { AuthTabs } from "@/components/AuthTabs";
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col gap-1">
+    <div className="min-h-screen flex flex-col gap-1">
       <MaxWidthWrapper className="mb-12 sm:mt-32 flex flex-col items-center justify-center text-center">
         <div className="mx-auto mb-4 flex max-w-fit items-center justify-center space-x-2 overflow-hidden rounded-full border px-7 py-2 shadow-md backdrop-blur transition-all">
           <p className="text-sm font-semibold text-gray-700">
@@ -18,6 +18,6 @@ export default function Home() {
       <div className="mt-10 flex items-center justify-center">
         <AuthTabs />
       </div>
-    </main>
+    </div>
   );
 }

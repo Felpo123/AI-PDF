@@ -31,7 +31,7 @@ const helloRouter = router({
         email: z.string(),
       })
     )
-    .mutation(() => {
+    .query(() => {
       return {
         id: "",
         name: "",
@@ -44,7 +44,8 @@ const helloRouter = router({
         email: z.string(),
         name: z.string(),
       })
-    ).mutation(() => {
+    )
+    .mutation(() => {
       return {
         id: "",
         name: "",

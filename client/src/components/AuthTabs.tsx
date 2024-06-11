@@ -1,5 +1,6 @@
 "use client";
 
+import { trpc } from "@/app/_trpc/client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,11 +14,42 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export function AuthTabs() {
-  // const router = useRouter();
-  // const [email, setEmail] = useState<string>("");
-  // const [errorMsg, setErorMsg] = useState<string | null>(null);
+  const router = useRouter();
+  const [email, setEmail] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [errorMsg, setErorMsg] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const {
+    mutate: register,
+    isPending,
+    isSuccess,
+  } = trpc.hello.createUser.useMutation();
+
+  const handleLogin = (email: string) => {
+    try {
+      setErorMsg(null);
+      setLoading(true);
+      signIn("credentials", {
+        email,
+        redirect: false,
+        callbackUrl: "/dashboard",
+      }).then((res) => {
+        if (!res?.error) {
+          router.push("/dashboard");
+        }
+        setErorMsg("Email no encontrado");
+      });
+    } catch (error) {
+      setErorMsg("Error al iniciar sesión");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Tabs defaultValue="ingreso" className="w-[400px]">
@@ -33,20 +65,22 @@ export function AuthTabs() {
           </CardHeader>
           <CardContent className="space-y-2">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" defaultValue="john@gmail.com" />
+            <Input
+              id="email"
+              placeholder="john@gmail.com"
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </CardContent>
           <CardFooter>
             <Button
               onClick={() => {
-                signIn("credentials", {
-                  email: "",
-                  redirect: true,
-                  callbackUrl: "/dashboard",
-                });
+                handleLogin(email);
               }}
             >
               Ingresar
             </Button>
+            {loading && <p>Ingresando...</p>}
+            {errorMsg && <p>{errorMsg}</p>}
           </CardFooter>
         </Card>
       </TabsContent>
@@ -59,15 +93,34 @@ export function AuthTabs() {
           <CardContent className="space-y-2">
             <div className="space-y-1">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" />
+              <Input
+                id="email"
+                type="email"
+                placeholder="john@gmail.com"
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </div>
             <div className="space-y-1">
               <Label htmlFor="name">Nombre</Label>
-              <Input id="name" type="text" />
+              <Input
+                id="name"
+                type="text"
+                placeholder="John Doe"
+                onChange={(e) => setName(e.target.value)}
+              />
             </div>
           </CardContent>
           <CardFooter>
-            <Button>Registrar</Button>
+            <Button
+              onClick={() => {
+                register({ email, name });
+              }}
+              disabled={isPending}
+            >
+              Registrar
+            </Button>
+            {isPending && <p>Registrando...</p>}
+            {isSuccess && <p>Registrado correctamente</p>}
           </CardFooter>
         </Card>
       </TabsContent>
