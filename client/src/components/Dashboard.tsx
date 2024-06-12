@@ -7,11 +7,14 @@ import { Ghost, MessageSquare, Plus } from "lucide-react";
 import { format } from "date-fns";
 import Skeleton from "react-loading-skeleton";
 import { useState } from "react";
-interface DashboardProps {userId:string}
-function Dashboard({userId}: DashboardProps) {
-  const {data:files,isLoading} = trpc.hello.getUserFiles.useQuery({userId});
+interface DashboardProps {
+  userId: string;
+}
+function Dashboard({ userId }: DashboardProps) {
+  const { data: files, isLoading } = trpc.file.getUserFiles.useQuery({
+    userId,
+  });
   console.log(files);
-  
 
   return (
     <main className="mx-auto max-w-7xl md:p-10">

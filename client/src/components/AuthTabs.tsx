@@ -28,11 +28,11 @@ export function AuthTabs() {
     mutate: register,
     isPending,
     isSuccess,
-  } = trpc.hello.createUser.useMutation();
+  } = trpc.auth.createUser.useMutation();
 
   const handleLogin = (email: string) => {
     try {
-      setErorMsg(null);
+      setErorMsg("Procesando...");
       setLoading(true);
       signIn("credentials", {
         email,
@@ -41,8 +41,9 @@ export function AuthTabs() {
       }).then((res) => {
         if (!res?.error) {
           router.push("/dashboard");
+        } else {
+          setErorMsg("Email no encontrado");
         }
-        setErorMsg("Email no encontrado");
       });
     } catch (error) {
       setErorMsg("Error al iniciar sesión");

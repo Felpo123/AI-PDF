@@ -10,30 +10,10 @@ const createContext = ({
 type Context = inferAsyncReturnType<typeof createContext>;
 const t = initTRPC.context<Context>().create();
 
-const middleware = t.middleware;
-const router = t.router;
-const publicProcedure = t.procedure;
-type File = { 
-  id: string; 
-  name: string; 
-  content: string; 
-  userId: string; 
-  createdAt: string;
-  updatedAt: string;
+export const router = t.router;
+export const publicProcedure = t.procedure;
 
-};
-
-const helloRouter = router({
-  helloWord: publicProcedure.input(z.string()).query(async ({ input }) => {
-    return `Hello, ${input}!`;
-  }),
-  getUser: publicProcedure.input(z.string()).query(async ({ input }) => {
-    return {
-      id: "",
-      name: "",
-      email: "",
-    };
-  }),
+const authRouter = router({
   login: publicProcedure
     .input(
       z.object({
@@ -61,22 +41,33 @@ const helloRouter = router({
         email: "",
       };
     }),
+});
+
+type File = {
+  id: string;
+  name: string;
+  content: string;
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+const fileRouter = router({
   getUserFiles: publicProcedure
     .input(
-      z.object({ 
-        userId: z.string() 
+      z.object({
+        userId: z.string(),
       })
     )
     .query(() => {
-      return [] as File[]
-      
+      return [] as File[];
     }),
   uploadFile: publicProcedure
     .input(
       z.object({
-        name:z.string(),
-        content:z.string(),
-        userId:z.string(),
+        name: z.string(),
+        content: z.string(),
+        userId: z.string(),
       })
     )
     .mutation(() => {
@@ -90,7 +81,8 @@ const helloRouter = router({
 });
 
 const appRouter = router({
-  hello: helloRouter,
+  auth: authRouter,
+  file: fileRouter,
 });
 
 export type AppRouter = typeof appRouter;
