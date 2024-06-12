@@ -1,52 +1,30 @@
 "use client";
 
+import { trpc } from "@/app/_trpc/client";
 import UploadButton from "./UploadButton";
 import Link from "next/link";
 import { Ghost, MessageSquare, Plus } from "lucide-react";
 import { format } from "date-fns";
 import Skeleton from "react-loading-skeleton";
 import { useState } from "react";
-
-function Dashboard() {
-  const [isLoading, setIsLoading] = useState(true);
-
-  const mockFiles = [
-    {
-      id: "1",
-      name: "file1",
-      createdAt: "2021-09-01T00:00:00.000Z",
-    },
-    {
-      id: "2",
-      name: "file2",
-      createdAt: "2021-09-02T00:00:00.000Z",
-    },
-    {
-      id: "3",
-      name: "file3",
-      createdAt: "2021-09-03T00:00:00.000Z",
-    },
-  ];
-
-  //crea un intervalo de 1500 ms para simular la carga de los archivos
-  setTimeout(() => {
-    setIsLoading(false);
-  }, 1500);
-
-  // hacer llamada a la api para obtener los archivos
+interface DashboardProps {userId:string}
+function Dashboard({userId}: DashboardProps) {
+  const {data:files,isLoading} = trpc.hello.getUserFiles.useQuery({userId});
+  console.log(files);
+  
 
   return (
     <main className="mx-auto max-w-7xl md:p-10">
       <div className="mt-8 flex flex-col items-start justify-between gap-4 border-b border-gray-200 pb-5 sm:flex-row sm:items-center sm:gap-0">
         <h1 className="mb-3 font-bold text-5xl text-gray-900">Mis PDFs</h1>
 
-        <UploadButton />
+        <UploadButton userId={userId} />
       </div>
 
       {/* display all user files */}
-      {mockFiles && mockFiles?.length !== 0 ? (
+      {files && files?.length !== 0 ? (
         <ul className="mt-8 grid grid-cols-1 gap-6 divide-y divide-zinc-200 md:grid-cols-2 lg:grid-cols-3">
-          {mockFiles
+          {files
             .sort(
               (a, b) =>
                 new Date(b.createdAt).getTime() -
@@ -92,8 +70,8 @@ function Dashboard() {
       ) : (
         <div className="mt-16 flex flex-col items-center gap-2">
           <Ghost className="h-8 w-8 text-zinc-800" />
-          <h3 className="font-semibold text-xl">Pretty empty around here</h3>
-          <p>Let&apos;s upload your first PDF.</p>
+          <h3 className="font-semibold text-xl">No hay nada aqui</h3>
+          <p>Sube tu primer PDF</p>
         </div>
       )}
     </main>

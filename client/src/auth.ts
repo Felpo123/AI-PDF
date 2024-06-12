@@ -1,6 +1,15 @@
-import NextAuth, { User } from "next-auth";
+import NextAuth, { DefaultSession, User } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { trpc } from "./trpc/client";
+
+declare module "next-auth" {
+
+  interface Session {
+    user: {
+      id: string,
+    } & DefaultSession["user"]
+  }
+}
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -24,4 +33,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
+  callbacks: {
+      session({session, user, token}) {
+      console.log("session", session,token);
+      session.user.id = token.sub as string;
+      return session;
+    },
+  },
 });

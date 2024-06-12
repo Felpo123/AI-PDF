@@ -13,6 +13,15 @@ const t = initTRPC.context<Context>().create();
 const middleware = t.middleware;
 const router = t.router;
 const publicProcedure = t.procedure;
+type File = { 
+  id: string; 
+  name: string; 
+  content: string; 
+  userId: string; 
+  createdAt: string;
+  updatedAt: string;
+
+};
 
 const helloRouter = router({
   helloWord: publicProcedure.input(z.string()).query(async ({ input }) => {
@@ -50,6 +59,32 @@ const helloRouter = router({
         id: "",
         name: "",
         email: "",
+      };
+    }),
+  getUserFiles: publicProcedure
+    .input(
+      z.object({ 
+        userId: z.string() 
+      })
+    )
+    .query(() => {
+      return [] as File[]
+      
+    }),
+  uploadFile: publicProcedure
+    .input(
+      z.object({
+        name:z.string(),
+        content:z.string(),
+        userId:z.string(),
+      })
+    )
+    .mutation(() => {
+      return {
+        id: "",
+        name: "",
+        content: "",
+        userId: "",
       };
     }),
 });

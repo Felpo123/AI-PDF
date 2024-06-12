@@ -1,5 +1,7 @@
 "use client";
 
+import { useSession } from "next-auth/react"
+import { trpc } from "@/app/_trpc/client";
 import { useState } from "react";
 import { useToast } from "./ui/use-toast";
 import Dropzone from "react-dropzone";
@@ -7,8 +9,8 @@ import { BadgeCheck, Cloud, File, Loader2 } from "lucide-react";
 import { Progress } from "./ui/progress";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { Button } from "./ui/button";
-
-const UploadDropzone = () => {
+interface UploadDropzoneProps { userId: string; }
+const UploadDropzone = ({userId}:UploadDropzoneProps) => {
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const { toast } = useToast();
@@ -29,10 +31,10 @@ const UploadDropzone = () => {
     return interval;
   };
 
-  //PROCEDURE PARA LA CARGA DE ARCHIVO
-  // const uploadPDF = trpc.uploadPDF.useMutation();
+  const uploadPDF = trpc.hello.uploadFile.useMutation();
 
   return (
+
     <Dropzone
       multiple={false}
       accept={{ "apllication/pdf": [".pdf"] }}
@@ -47,10 +49,11 @@ const UploadDropzone = () => {
         reader.onloadend = async function () {
           const base64data = reader.result?.toString().split(",")[1];
           if (base64data) {
-            // await uploadPDF.mutateAsync({
-            //   fileName: acceptedFile[0].name,
-            //   base64: base64data,
-            // });
+                await uploadPDF.mutateAsync({
+                  name: acceptedFile[0].name,
+                  content: base64data,
+                  userId: userId,
+                });
           } else {
             toast({
               title: "Something went wrong",
@@ -124,9 +127,11 @@ const UploadDropzone = () => {
     </Dropzone>
   );
 };
+interface UploadButtonProps { userId: string; }
+function UploadButton({ userId }: UploadButtonProps){
 
-function UploadButton() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
 
   return (
     <Dialog
@@ -142,7 +147,7 @@ function UploadButton() {
       </DialogTrigger>
 
       <DialogContent>
-        <UploadDropzone />
+        <UploadDropzone userId = {userId}/>
       </DialogContent>
     </Dialog>
   );
