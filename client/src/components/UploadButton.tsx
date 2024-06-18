@@ -66,7 +66,6 @@ const UploadDropzone = ({ userId }: UploadDropzoneProps) => {
 
         clearInterval(progressInterval);
         setUploadProgress(100);
-        console.log(acceptedFile);
       }}
     >
       {({ getRootProps, getInputProps, acceptedFiles }) => (

@@ -19,7 +19,6 @@ export const fileRouter = router({
           message: "Files not found",
         });
       }
-      console.log(files);
       return files;
     }),
   uploadFile: publicProcedure
@@ -46,4 +45,23 @@ export const fileRouter = router({
       }
       return file;
     }),
+  getFile: publicProcedure
+    .input(
+      z.object({
+        fileId: z.string(),
+      })
+    )
+    .query(async ({ input }) => {
+      const file = await db.file.findFirst({ where: { id: input.fileId } });
+      if (!file) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "File not found",
+        });
+      }
+      return file;
+    }),
+  hola: publicProcedure.query(async () => {
+    return "Hola";
+  }),
 });

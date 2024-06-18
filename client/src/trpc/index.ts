@@ -1,5 +1,6 @@
 import { inferAsyncReturnType, initTRPC } from "@trpc/server";
 import * as trpcExpress from "@trpc/server/adapters/express";
+import { get } from "http";
 import superjson from "superjson";
 import { z } from "zod";
 
@@ -78,11 +79,36 @@ const fileRouter = router({
         userId: "",
       };
     }),
+  getFile: publicProcedure
+    .input(
+      z.object({
+        fileId: z.string(),
+      })
+    )
+    .query(() => {
+      return {} as File;
+    }),
+});
+
+const messageRouter = router({
+  getAIMessage: publicProcedure
+    .input(
+      z.object({
+        message: z.string(),
+        fileContent: z.string(),
+      })
+    )
+    .query(() => {
+      return {
+        content: "",
+      };
+    }),
 });
 
 const appRouter = router({
   auth: authRouter,
   file: fileRouter,
+  message: messageRouter,
 });
 
 export type AppRouter = typeof appRouter;
