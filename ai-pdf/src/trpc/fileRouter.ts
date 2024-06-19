@@ -61,7 +61,23 @@ export const fileRouter = router({
       }
       return file;
     }),
-  hola: publicProcedure.query(async () => {
-    return "Hola";
+  deleteFile: publicProcedure
+  .input(z.object({ fileId: z.string(),userId: z.string() }))
+  .mutation(async ({ input }) => {
+    const file = await db.file.findFirst({
+      where: {
+        id: input.fileId,
+        userId: input.userId,
+      },
+    })
+    if (!file) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "File not found",
+      });
+    }
+    await db.file.delete({ where: { id: input.fileId } });
+    
+    return file;
   }),
 });

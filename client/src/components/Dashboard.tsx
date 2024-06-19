@@ -16,21 +16,23 @@ function Dashboard({ userId }: DashboardProps) {
     string | null
   >(null);
 
+  const utils = trpc.useUtils();
+
   const { data: files, isLoading } = trpc.file.getUserFiles.useQuery({
     userId,
   });
 
-  // const { mutate: deleteFile } = trpc.file.deleteFile.useMutation({
-  //   onSuccess: () => {
-  //     trpc.file.getUserFiles.invalidate();
-  //   },
-  //   onMutate({ id }) {
-  //     setCurrentlyDeletingFile(id);
-  //   },
-  //   onSettled() {
-  //     setCurrentlyDeletingFile(null);
-  //   },
-  // });
+  const { mutate: deleteFile } = trpc.file.deleteFile.useMutation({
+      onSuccess() {
+        utils.file.getUserFiles.invalidate({ userId });
+      },
+      onMutate({ fileId }) {
+        setCurrentlyDeletingFile(fileId);
+      },
+      onSettled() {
+        setCurrentlyDeletingFile(null);
+      },
+   });
 
   return (
     <main className="mx-auto max-w-7xl md:p-10">
@@ -77,7 +79,7 @@ function Dashboard({ userId }: DashboardProps) {
                   </div>
 
                   <Button
-                    onClick={() => console.log("delete", file.id)}
+                    onClick={() => deleteFile({ fileId: file.id,userId: file.userId})}
                     size="sm"
                     className="w-full"
                     variant="default"

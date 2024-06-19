@@ -88,6 +88,14 @@ const fileRouter = router({
     .query(() => {
       return {} as File;
     }),
+    deleteFile: publicProcedure.input(z.object({ fileId: z.string(),userId: z.string() })).mutation(() => {
+      return {
+        id: "",
+        name: "",
+        content: "",
+        userId: "",
+      };
+    }),
 });
 
 const messageRouter = router({
