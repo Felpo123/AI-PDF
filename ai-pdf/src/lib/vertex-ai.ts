@@ -36,6 +36,14 @@ async function generateContent(fileContent: string, userMessage: string) {
         threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
       },
     ],
+    systemInstruction: {
+      role: "system",
+      parts: [
+        {
+          text: "responde la pregunta de los usuarios en formato Markdown.",
+        },
+      ],
+    },
   });
 
   const document = {

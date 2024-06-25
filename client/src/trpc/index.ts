@@ -88,7 +88,9 @@ const fileRouter = router({
     .query(() => {
       return {} as File;
     }),
-    deleteFile: publicProcedure.input(z.object({ fileId: z.string(),userId: z.string() })).mutation(() => {
+  deleteFile: publicProcedure
+    .input(z.object({ fileId: z.string(), userId: z.string() }))
+    .mutation(() => {
       return {
         id: "",
         name: "",
@@ -103,12 +105,32 @@ const messageRouter = router({
     .input(
       z.object({
         message: z.string(),
-        fileContent: z.string(),
+        fileID: z.string(),
+      })
+    )
+    .mutation(() => {
+      return {
+        content: "",
+      };
+    }),
+
+  getFileMessages: publicProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(100).nullish(),
+        cursor: z.string().nullish(),
+        fileID: z.string(),
       })
     )
     .query(() => {
-      return {
-        content: "",
+      return {} as {
+        messages: {
+          id: string;
+          text: string;
+          isUserMessage: boolean;
+          createdAt: Date;
+        }[];
+        nextCursor: string | undefined;
       };
     }),
 });

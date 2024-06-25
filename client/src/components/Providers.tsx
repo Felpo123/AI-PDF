@@ -13,7 +13,6 @@ const Providers = ({ children }: PropsWithChildren) => {
         httpBatchLink({
           url: "http://localhost:3000/api/trpc",
           fetch(url, options) {
-            console.log("fetching", url, options);
             return fetch(url, {
               ...options,
               credentials: "omit",
