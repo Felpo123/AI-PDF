@@ -29,7 +29,7 @@ const Message = forwardRef<HTMLDivElement, MessageProps>(
           className={cn(
             "relative flex h-6 w-6 aspect-square items-center justify-center",
             {
-              "order-2 bg-blue-600 rounded-sm": message.isUserMessage,
+              "order-2 bg-primary rounded-sm": message.isUserMessage,
               "order-1 bg-zinc-800 rounded-sm": !message.isUserMessage,
               invisible: isNextMessageSamePerson,
             }
@@ -50,7 +50,7 @@ const Message = forwardRef<HTMLDivElement, MessageProps>(
         >
           <div
             className={cn("px-4 py-2 rounded-lg inline-block", {
-              "bg-blue-600 text-white": message.isUserMessage,
+              "bg-primary text-white": message.isUserMessage,
               "bg-gray-200 text-gray-900": !message.isUserMessage,
               "rounded-br-none":
                 !isNextMessageSamePerson && message.isUserMessage,
@@ -73,7 +73,7 @@ const Message = forwardRef<HTMLDivElement, MessageProps>(
               <div
                 className={cn("text-xs select-none mt-2 w-full text-right", {
                   "text-zinc-500": !message.isUserMessage,
-                  "text-blue-300": message.isUserMessage,
+                  "text-primary": message.isUserMessage,
                 })}
               >
                 {format(new Date(message.createdAt), "HH:mm")}

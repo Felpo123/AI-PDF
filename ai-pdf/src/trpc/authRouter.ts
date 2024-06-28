@@ -29,7 +29,7 @@ export const authRouter = router({
       })
     )
     .mutation(async ({ input }) => {
-      const user = db.user.create({
+      const user = await db.user.create({
         data: { email: input.email, name: input.name },
       });
       if (!user) {

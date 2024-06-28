@@ -62,22 +62,23 @@ export const fileRouter = router({
       return file;
     }),
   deleteFile: publicProcedure
-  .input(z.object({ fileId: z.string(),userId: z.string() }))
-  .mutation(async ({ input }) => {
-    const file = await db.file.findFirst({
-      where: {
-        id: input.fileId,
-        userId: input.userId,
-      },
-    })
-    if (!file) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "File not found",
+    .input(z.object({ fileId: z.string(), userId: z.string() }))
+    .mutation(async ({ input }) => {
+      const file = await db.file.findFirst({
+        where: {
+          id: input.fileId,
+          userId: input.userId,
+        },
       });
-    }
-    await db.file.delete({ where: { id: input.fileId } });
-    
-    return file;
-  }),
+      if (!file) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "File not found",
+        });
+      }
+      await db.message.deleteMany({ where: { fileId: input.fileId } });
+      await db.file.delete({ where: { id: input.fileId } });
+
+      return file;
+    }),
 });

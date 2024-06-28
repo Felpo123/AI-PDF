@@ -33,7 +33,12 @@ const UploadDropzone = ({ userId }: UploadDropzoneProps) => {
     return interval;
   };
 
-  const uploadPDF = trpc.file.uploadFile.useMutation();
+  const utils = trpc.useUtils();
+  const uploadPDF = trpc.file.uploadFile.useMutation({
+    onSuccess() {
+      utils.file.getUserFiles.invalidate({ userId });
+    },
+  });
 
   return (
     <Dropzone

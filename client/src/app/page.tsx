@@ -1,7 +1,15 @@
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { AuthTabs } from "@/components/AuthTabs";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
-export default function Home() {
+export default async function Home() {
+  const user = await auth();
+
+  if (user) {
+    return redirect("/dashboard");
+  }
+
   return (
     <div className="min-h-screen flex flex-col gap-1">
       <MaxWidthWrapper className="mb-12 sm:mt-32 flex flex-col items-center justify-center text-center">

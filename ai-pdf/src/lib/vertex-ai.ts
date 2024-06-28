@@ -40,7 +40,7 @@ async function generateContent(fileContent: string, userMessage: string) {
       role: "system",
       parts: [
         {
-          text: "responde la pregunta de los usuarios en formato Markdown.",
+          text: "responde la pregunta de los usuarios en formato Markdown. Se breve en tus respuestas no mas de 50 palabras",
         },
       ],
     },
